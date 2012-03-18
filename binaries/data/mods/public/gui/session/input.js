@@ -1174,6 +1174,26 @@ function flushTrainingQueueBatch()
 	Engine.PostNetworkCommand({"type": "train", "entity": batchTrainingEntity, "template": batchTrainingType, "count": batchTrainingCount});
 }
 
+// Add the position leftmost unit to the training queue of the selected building
+function addQueueUnit(entity, position)
+{
+    if (entity)
+    {
+        entState = GetEntityState(entity);
+        if (entState && isStructure(entState))
+        {
+            if (entState.training && entState.training.entities)
+            {
+                // it is a building that can produce units
+                if (position < entState.training.entities.length)
+                {
+                    addToTrainingQueue(entState.id, entState.training.entities[position])
+                }
+            }
+        }
+    }
+}
+
 // Called by GUI when user clicks training button
 function addToTrainingQueue(entity, trainEntType)
 {
