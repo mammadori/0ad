@@ -1207,6 +1207,35 @@ function flushTrainingBatch()
 	Engine.PostNetworkCommand({"type": "train", "entities": batchTrainingEntities, "template": batchTrainingType, "count": batchTrainingCount});
 }
 
+// Add the position leftmost unit to the training queue of the selected building
+function addQueueUnit(entity, position)
+{
+	if (entity)
+	{
+		entState = GetEntityState(entity);
+		if (entState && entState.training && entState.training.entities)
+		{
+			// it is a building that can produce units
+			if (position < entState.training.entities.length)
+			{
+				addToTrainingQueue(entState.id, entState.training.entities[position]);
+			}
+		}
+	}
+}
+
+function addQueueAll(position)
+{
+	var selection = g_Selection.toList();
+
+	if (!selection.length)
+		return;
+
+	selection.forEach(function(entity) {
+		addQueueUnit(entity, position);
+	});
+}
+
 // Called by GUI when user clicks training button
 function addTrainingToQueue(selection, trainEntType)
 {

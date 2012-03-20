@@ -331,8 +331,15 @@ function setupUnitPanel(guiName, usedPanels, unitEntState, items, callback)
 				if (template.speed)
 					tooltip += "\n" + getEntitySpeed(template);
 
-				tooltip += "\n\n[font=\"serif-bold-13\"]Shift-click[/font][font=\"serif-13\"] to train " + trainNum + ".[/font]";
+				if (i >= 0 && i < 4)
+				{
+					var train_hotkeys = ["Z", "X", "C", "V"];
+					tooltip += "\n\n[font=\"serif-bold-13\"]HotKey (" + train_hotkeys[i] + ").[/font]";
+				} else {
+					tooltip += "\n";
+				}
 
+				tooltip += "\n[font=\"serif-bold-13\"]Shift-click[/font][font=\"serif-13\"] to train " + trainNum + ".[/font]";
 				break;
 				
 			case RESEARCH:
