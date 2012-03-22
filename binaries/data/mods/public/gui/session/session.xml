@@ -103,6 +103,11 @@
 			<action on="Press">findIdleUnit(["Hero", "Champion", "CitizenSoldier", "Siege", "Warship"]);</action>
 		</object>
 
+		<!-- Find next Civic Centre -->
+		<object hotkey="selection.civcentre">
+			<action on="Press">findNextEntity(["CivCentre"]);</action>
+		</object>
+
 		<!-- ================================  ================================ -->
 		<!-- Developer / Debug items -->
 		<!-- ================================  ================================ -->

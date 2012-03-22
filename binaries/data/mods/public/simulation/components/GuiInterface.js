@@ -792,6 +792,37 @@ GuiInterface.prototype.FindIdleUnit = function(player, data)
 	return 0;
 };
 
+function isClass(ent, myClass, checkIdle)
+{
+	var cmpIdentity = Engine.QueryInterface(ent, IID_Identity);
+
+	if (checkIdle)
+	{
+		var cmpUnitAI = Engine.QueryInterface(ent, IID_UnitAI);
+		// TODO: Do something with garrisoned idle units
+		return (cmpUnitAI && cmpIdentity && cmpUnitAI.IsIdle() && !cmpUnitAI.IsGarrisoned() && myClass && cmpIdentity.HasClass(myClass));
+	} else {
+		return (cmpIdentity && myClass && cmpIdentity.HasClass(myClass));
+	}
+}
+
+GuiInterface.prototype.FindNextClass = function(player, data)
+{
+	var rangeMan = Engine.QueryInterface(SYSTEM_ENTITY, IID_RangeManager);
+	var playerEntities = rangeMan.GetEntitiesByPlayer(player);
+
+	// Find the first matching entity that is after the previous selection,
+	// so that we cycle around in a predictable order
+	for each (var ent in playerEntities)
+	{
+		if (ent > data.prev && isClass(ent, data.myClass, data.checkIdle))
+			return ent;
+	}
+
+	return 0;
+};
+
+
 GuiInterface.prototype.GetTradingDetails = function(player, data)
 {
 	var cmpEntityTrader = Engine.QueryInterface(data.trader, IID_Trader);
@@ -901,6 +932,7 @@ var exposedFunctions = {
 	"GetFoundationSnapData": 1,
 	"PlaySound": 1,
 	"FindIdleUnit": 1,
+    "FindNextClass": 1,
 	"GetTradingDetails": 1,
 
 	"SetPathfinderDebugOverlay": 1,

@@ -1479,6 +1479,43 @@ function findIdleUnit(classes)
 	resetIdleUnit();
 }
 
+var lastEntity = 0; // deve essere un dizionario contenuto nella funzione, non un paio di globali
+var currClass = 0;
+
+function resetEntity()
+{
+	lastEntity = 0;
+	currEntityClass = 0;
+}
+
+function findNextEntity(classes, checkIdle)
+{
+	// Cycle through classes before giving up
+	for (var i = 0; i <= classes.length; ++i)
+	{
+		var data = { prev: lastEntity, myClass: classes[currClass], checkIdle: checkIdle };
+		var newEntity = Engine.GuiInterfaceCall("FindNextClass", data);
+
+		// Check if we have new valid entity
+		if (newEntity && newEntity != lastEntity)
+		{
+			g_Selection.reset();
+			g_Selection.addList([newEntity]);
+			Engine.CameraFollow(newEntity);
+			lastEntity = newEntity;
+
+			return;
+		}
+
+		lastEntity = 0;
+		currClass = (currClass + 1) % classes.length;
+	}
+
+	// TODO: display a message or play a sound to indicate no more idle units, or something
+	// Reset for next cycle
+	resetEntity();
+}
+
 function unload(garrisonHolder, entities)
 {
 	if (Engine.HotkeyIsPressed("session.unloadtype"))
